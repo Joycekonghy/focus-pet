@@ -1,35 +1,14 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server-stripe.js",
-      "use": "@vercel/node"
+  "functions": {
+    "server-stripe.js": {
+      "runtime": "@vercel/node"
     }
-  ],
+  },
   "routes": [
     {
-      "src": "/create-checkout-session",
+      "src": "/api/(.*)",
       "dest": "/server-stripe.js"
-    },
-    {
-      "src": "/webhook",
-      "dest": "/server-stripe.js"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/pricing.html",
-      "dest": "/pricing.html"
-    },
-    {
-      "src": "/success.html",
-      "dest": "/success.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
     }
   ]
 }
