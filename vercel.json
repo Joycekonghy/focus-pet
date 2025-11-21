@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "server-stripe.js",
       "use": "@vercel/node"
     }
@@ -20,8 +16,20 @@
       "dest": "/server-stripe.js"
     },
     {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/pricing.html",
+      "dest": "/pricing.html"
+    },
+    {
+      "src": "/success.html",
+      "dest": "/success.html"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/server.js"
+      "dest": "/$1"
     }
   ]
 }
