@@ -1,0 +1,18 @@
+{
+  "name": "focus-pet",
+  "version": "1.0.0",
+  "description": "Virtual pet browser companion that reacts to your browsing habits",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "stripe": "node server-stripe.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "stripe": "^14.0.0"
+  },
+  "keywords": ["virtual-pet", "browser-extension", "productivity"],
+  "author": "Your Name",
+  "license": "MIT"
+}

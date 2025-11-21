@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Pet - Pricing</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 Choose Your Plan</h1>
+            <p>Unlock amazing pets, reactions, and AI features</p>
+            <nav>
+                <a href="index.html" class="nav-link">← Back to Dashboard</a>
+            </nav>
+        </header>
+
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card free">
+                <div class="plan-header">
+                    <h2>Free</h2>
+                    <div class="price">$0</div>
+                    <p>Perfect for getting started</p>
+                </div>
+                <div class="features">
+                    <div class="feature included">✅ Cat & Dog pets</div>
+                    <div class="feature included">✅ 4 basic reactions</div>
+                    <div class="feature included">✅ Custom avatar upload</div>
+                    <div class="feature excluded">❌ Premium pets</div>
+                    <div class="feature excluded">❌ AI Animation Studio</div>
+                    <div class="feature excluded">❌ Advanced reactions</div>
+                </div>
+                <button class="plan-btn current" disabled>Current Plan</button>
+            </div>
+
+            <!-- Premium Pets -->
+            <div class="pricing-card premium">
+                <div class="plan-header">
+                    <h2>Premium Pets</h2>
+                    <div class="price-options">
+                        <div class="price-option">
+                            <span class="price">$0.99</span>
+                            <span class="per">per pet</span>
+                        </div>
+                        <div class="price-divider">or</div>
+                        <div class="price-option featured">
+                            <span class="price">$4.99</span>
+                            <span class="per">all 25 pets</span>
+                            <span class="save">Save $20!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="features">
+                    <div class="feature included">✅ 25 premium pet types</div>
+                    <div class="feature included">✅ Dragon, Unicorn, Phoenix</div>
+                    <div class="feature included">✅ Galaxy, Crystal, Flame</div>
+                    <div class="feature included">✅ All future pets included</div>
+                </div>
+                <div class="plan-buttons">
+                    <button class="plan-btn" onclick="buyAllPets()">Buy All Pets - $4.99</button>
+                    <button class="plan-btn secondary" onclick="showIndividualPets()">Buy Individual - $0.99</button>
+                </div>
+            </div>
+
+            <!-- Advanced Reactions -->
+            <div class="pricing-card premium">
+                <div class="plan-header">
+                    <h2>Advanced Reactions</h2>
+                    <div class="price-options">
+                        <div class="price-option">
+                            <span class="price">$0.99</span>
+                            <span class="per">per reaction</span>
+                        </div>
+                        <div class="price-divider">or</div>
+                        <div class="price-option featured">
+                            <span class="price">$4.99</span>
+                            <span class="per">all 21 reactions</span>
+                            <span class="save">Save $16!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="features">
+                    <div class="feature included">✅ 21 advanced reactions</div>
+                    <div class="feature included">✅ Emotional expressions</div>
+                    <div class="feature included">✅ Activity-based states</div>
+                    <div class="feature included">✅ All future reactions</div>
+                </div>
+                <div class="plan-buttons">
+                    <button class="plan-btn" onclick="buyAllReactions()">Buy All Reactions - $4.99</button>
+                    <button class="plan-btn secondary" onclick="showIndividualReactions()">Buy Individual - $0.99</button>
+                </div>
+            </div>
+
+            <!-- AI Animation Studio -->
+            <div class="pricing-card premium">
+                <div class="plan-header">
+                    <h2>AI Animation Studio</h2>
+                    <div class="price">$2.99</div>
+                    <p>Create unlimited custom animations</p>
+                </div>
+                <div class="features">
+                    <div class="feature included">✅ AI-powered animation generation</div>
+                    <div class="feature included">✅ Custom color effects</div>
+                    <div class="feature included">✅ Unlimited creations</div>
+                    <div class="feature included">✅ Save & assign to sites</div>
+                </div>
+                <button class="plan-btn" onclick="buyAIStudio()">Unlock AI Studio - $2.99</button>
+            </div>
+
+            <!-- Everything Bundle -->
+            <div class="pricing-card bundle">
+                <div class="plan-header">
+                    <div class="popular-badge">🔥 Most Popular</div>
+                    <h2>Everything Bundle</h2>
+                    <div class="price">$7.00</div>
+                    <div class="original-price">$11.97 value</div>
+                    <p>All features unlocked forever</p>
+                </div>
+                <div class="features">
+                    <div class="feature included">✅ All 25 premium pets</div>
+                    <div class="feature included">✅ All 21 advanced reactions</div>
+                    <div class="feature included">✅ AI Animation Studio</div>
+                    <div class="feature included">✅ Future updates included</div>
+                    <div class="feature included">✅ Priority support</div>
+                </div>
+                <button class="plan-btn featured" onclick="buyEverything()">Get Everything - $7.00</button>
+                <div class="guarantee">💰 30-day money-back guarantee</div>
+            </div>
+        </div>
+
+        <!-- Individual Pet Selection Modal -->
+        <div id="pet-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Choose Individual Pets ($0.99 each)</h3>
+                <div class="pet-grid" id="premium-pets-grid">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                <div class="modal-actions">
+                    <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                    <button onclick="buySelectedPets()" class="btn-primary">Buy Selected</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual Reaction Selection Modal -->
+        <div id="reaction-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Choose Individual Reactions ($0.99 each)</h3>
+                <div class="reaction-grid" id="premium-reactions-grid">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                <div class="modal-actions">
+                    <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                    <button onclick="buySelectedReactions()" class="btn-primary">Buy Selected</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="pricing.js"></script>
+</body>
+</html>

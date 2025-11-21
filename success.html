@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Successful - Focus Pet</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="success-card">
+            <div class="success-icon">🎉</div>
+            <h1>Purchase Successful!</h1>
+            <p>Your premium features have been unlocked.</p>
+            <div id="purchase-details"></div>
+            <a href="index.html" class="btn-primary">Return to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        // Parse URL parameters to show what was purchased
+        const urlParams = new URLSearchParams(window.location.search);
+        const product = urlParams.get('product');
+        const items = urlParams.get('items');
+        
+        // Unlock features in localStorage
+        const purchases = JSON.parse(localStorage.getItem('focusPetPurchases') || '{}');
+        
+        if (product === 'all-pets') {
+            purchases.allPets = true;
+        } else if (product === 'all-reactions') {
+            purchases.allReactions = true;
+        } else if (product === 'ai-studio') {
+            purchases.aiStudio = true;
+        } else if (product === 'everything') {
+            purchases.everything = true;
+        }
+        
+        localStorage.setItem('focusPetPurchases', JSON.stringify(purchases));
+        
+        // Show purchase details
+        const details = document.getElementById('purchase-details');
+        if (product === 'everything') {
+            details.innerHTML = '<p>✅ All 25 premium pets unlocked<br>✅ All 21 advanced reactions unlocked<br>✅ AI Animation Studio unlocked</p>';
+        } else if (product === 'all-pets') {
+            details.innerHTML = '<p>✅ All 25 premium pets unlocked</p>';
+        } else if (product === 'all-reactions') {
+            details.innerHTML = '<p>✅ All 21 advanced reactions unlocked</p>';
+        } else if (product === 'ai-studio') {
+            details.innerHTML = '<p>✅ AI Animation Studio unlocked</p>';
+        }
+    </script>
+</body>
+</html>

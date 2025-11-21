@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Pet - Virtual Pet Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐾 Focus Pet Dashboard</h1>
+            <p>Configure your virtual pet companion</p>
+            <nav style="margin-top: 15px;">
+                <a href="pricing.html" class="nav-link" style="color: #6c5ce7; text-decoration: none; font-size: 16px; margin-right: 20px; transition: all 0.3s ease;">💎 Upgrade to Premium</a>
+                <a href="#" class="nav-link" style="color: #74b9ff; text-decoration: none; font-size: 14px;">View Purchases</a>
+            </nav>
+        </header>
+
+        <div class="dashboard">
+            <!-- Pet Preview -->
+            <div class="pet-preview">
+                <h2>Your Pet</h2>
+                <div class="pet-container">
+                    <div id="pet" class="pet idle"></div>
+                </div>
+                <div class="pet-stats">
+                    <div class="stat">
+                        <span>Mood:</span>
+                        <span id="mood">Happy</span>
+                    </div>
+                    <div class="stat">
+                        <span>Energy:</span>
+                        <span id="energy">100%</span>
+                    </div>
+                </div>
+                
+                <!-- Energy & Mood Instructions -->
+                <div class="tracking-info">
+                    <h3>🔋 How Energy & Mood Work</h3>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h4>⚡ Energy System</h4>
+                            <ul>
+                                <li><strong>100%</strong> → Fresh start, bright animations</li>
+                                <li><strong>80-99%</strong> → High energy, fast movements</li>
+                                <li><strong>35-79%</strong> → Normal energy, standard speed</li>
+                                <li><strong>15-34%</strong> → Low energy, slower & dimmer</li>
+                                <li><strong>0-14%</strong> → Exhausted, very sleepy</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4>😊 Mood Tracking</h4>
+                            <ul>
+                                <li><strong>Focused 🎯</strong> → Productive sites + good energy</li>
+                                <li><strong>Excited 😄</strong> → Entertainment & social media</li>
+                                <li><strong>Happy 😊</strong> → Balanced browsing habits</li>
+                                <li><strong>Tired 😪</strong> → Low energy from long sessions</li>
+                                <li><strong>Distracted 😵</strong> → Too much time wasting</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4>📊 What Affects Them</h4>
+                            <ul>
+                                <li><strong>Time spent</strong> → Energy decreases over time</li>
+                                <li><strong>Site type</strong> → Productive vs distractive</li>
+                                <li><strong>Activity</strong> → Mouse/keyboard movement</li>
+                                <li><strong>Breaks</strong> → Inactivity helps recovery</li>
+                                <li><strong>Patterns</strong> → Long sessions drain faster</li>
+                            </ul>
+                        </div>
+                        <div class="info-card">
+                            <h4>🎮 Pet Changes</h4>
+                            <ul>
+                                <li><strong>Animation speed</strong> → Slower when tired</li>
+                                <li><strong>Brightness</strong> → Dims with low energy</li>
+                                <li><strong>Reactions</strong> → Less enthusiastic when drained</li>
+                                <li><strong>Auto-states</strong> → Sleepy, focused, bored</li>
+                                <li><strong>Colors</strong> → Vibrant when energetic</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="demo-note">
+                        <p><strong>💡 Try it:</strong> Watch your pet's energy and mood change as you browse different sites. The longer you stay active, the more tired your pet becomes!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Selection -->
+            <div class="pet-selection">
+                <h2>Choose Pet Type</h2>
+                <div class="pet-options">
+                    <div class="pet-option active" data-pet="cat">
+                        <div class="pet cat idle"></div>
+                        <span>Cat</span>
+                    </div>
+                    <div class="pet-option" data-pet="dog">
+                        <div class="pet dog idle"></div>
+                        <span>Dog</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="rabbit">
+                        <div class="pet rabbit idle"></div>
+                        <span>Rabbit 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="bird">
+                        <div class="pet bird idle"></div>
+                        <span>Bird 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="fox">
+                        <div class="pet fox idle"></div>
+                        <span>Fox 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="panda">
+                        <div class="pet panda idle"></div>
+                        <span>Panda 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="hamster">
+                        <div class="pet hamster idle"></div>
+                        <span>Hamster 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="owl">
+                        <div class="pet owl idle"></div>
+                        <span>Owl 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="bear">
+                        <div class="pet bear idle"></div>
+                        <span>Bear 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="penguin">
+                        <div class="pet penguin idle"></div>
+                        <span>Penguin 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="frog">
+                        <div class="pet frog idle"></div>
+                        <span>Frog 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="turtle">
+                        <div class="pet turtle idle"></div>
+                        <span>Turtle 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="snake">
+                        <div class="pet snake idle"></div>
+                        <span>Snake 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="fish">
+                        <div class="pet fish idle"></div>
+                        <span>Fish 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="butterfly">
+                        <div class="pet butterfly idle"></div>
+                        <span>Butterfly 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="bee">
+                        <div class="pet bee idle"></div>
+                        <span>Bee 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="dragon">
+                        <div class="pet dragon idle"></div>
+                        <span>Dragon 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="unicorn">
+                        <div class="pet unicorn idle"></div>
+                        <span>Unicorn 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="phoenix">
+                        <div class="pet phoenix idle"></div>
+                        <span>Phoenix 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="alien">
+                        <div class="pet alien idle"></div>
+                        <span>Alien 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="ghost">
+                        <div class="pet ghost idle"></div>
+                        <span>Ghost 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="robot">
+                        <div class="pet robot idle"></div>
+                        <span>Robot 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="wizard">
+                        <div class="pet wizard idle"></div>
+                        <span>Wizard 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="crystal">
+                        <div class="pet crystal idle"></div>
+                        <span>Crystal 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="flame">
+                        <div class="pet flame idle"></div>
+                        <span>Flame 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="shadow">
+                        <div class="pet shadow idle"></div>
+                        <span>Shadow 👑</span>
+                    </div>
+                    <div class="pet-option premium" data-pet="galaxy">
+                        <div class="pet galaxy idle"></div>
+                        <span>Galaxy 👑</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Avatar Upload -->
+            <div class="custom-avatar">
+                <h2>Custom Avatar</h2>
+                <div class="upload-area">
+                    <input type="file" id="avatar-upload" accept="image/*">
+                    <label for="avatar-upload">
+                        📸 Upload Your Image
+                        <span>Transform into animated pet</span>
+                    </label>
+                </div>
+                
+                <!-- AI Animation Section -->
+                <div class="ai-animation" style="margin-top: 20px;">
+                    <h3>🤖 AI Animation Studio</h3>
+                    <div class="ai-controls">
+                        <input type="text" id="animation-prompt" class="ai-input" placeholder="Describe your animation (e.g., 'bouncing in red', 'spinning slowly in blue', 'glowing purple')">
+                        <button id="generate-animation" class="ai-btn">
+                            ✨ Generate AI Animation
+                        </button>
+                    </div>
+                    <div id="animation-preview" class="animation-preview" style="display: none;">
+                        <h4>Preview:</h4>
+                        <div id="animated-pet" class="pet custom"></div>
+                        <div class="save-controls">
+                            <input type="text" id="animation-name" class="name-input" placeholder="Name your animation (e.g., 'Happy Dance')">
+                            <button id="save-animation" class="save-btn">💾 Save Animation</button>
+                        </div>
+                    </div>
+                    <div id="ai-status" class="ai-status"></div>
+                </div>
+            </div>
+
+            <!-- Site Reactions -->
+            <div class="site-reactions">
+                <h2>Site Reactions</h2>
+                <div class="reaction-list">
+                    <div class="reaction-item">
+                        <input type="text" placeholder="youtube.com" class="site-input">
+                        <select class="reaction-select">
+                            <option value="headphones">🎧 Headphones</option>
+                            <option value="excited">😄 Excited</option>
+                            <option value="sleepy">😴 Sleepy</option>
+                            <option value="happy">😊 Happy</option>
+                        </select>
+                        <button class="preview-btn">👁️</button>
+                        <button class="remove-btn">×</button>
+                    </div>
+                </div>
+                <button id="add-reaction">+ Add Site Reaction</button>
+                
+                <!-- Reaction Preview -->
+                <div id="reaction-preview" class="reaction-preview" style="display: none;">
+                    <h3>Preview Reaction</h3>
+                    <div class="preview-container">
+                        <div id="preview-pet" class="pet cat idle"></div>
+                        <div class="preview-info">
+                            <span id="preview-site">youtube.com</span>
+                            <span id="preview-reaction">🎧 Headphones</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extension Download -->
+            <div class="extension-download">
+                <h2>Install Extension</h2>
+                <button id="download-extension" class="download-btn">
+                    📥 Download Chrome Extension
+                </button>
+                <p>Install to see your pet on all websites!</p>
+            </div>
+
+            <!-- Reactions Showcase -->
+            <div class="reactions-showcase">
+                <h2>All Available Reactions</h2>
+                <p>Click any reaction to see a live preview with your current pet</p>
+                <div class="reactions-grid">
+                    <div class="reaction-card" data-reaction="headphones">
+                        <div class="reaction-demo pet cat headphones"></div>
+                        <span>🎧 Headphones</span>
+                        <small>YouTube, Spotify</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="excited">
+                        <div class="reaction-demo pet cat excited"></div>
+                        <span>😄 Excited</span>
+                        <small>Social Media</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="sleepy">
+                        <div class="reaction-demo pet cat sleepy"></div>
+                        <span>😴 Sleepy</span>
+                        <small>Long Sessions</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="happy">
+                        <div class="reaction-demo pet cat happy"></div>
+                        <span>😊 Happy</span>
+                        <small>Productive Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="focused">
+                        <div class="reaction-demo pet cat focused"></div>
+                        <span>🎯 Focused</span>
+                        <small>Work Mode</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="stressed">
+                        <div class="reaction-demo pet cat stressed"></div>
+                        <span>😰 Stressed</span>
+                        <small>News Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="confused">
+                        <div class="reaction-demo pet cat confused"></div>
+                        <span>😵 Confused</span>
+                        <small>Complex Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="celebrating">
+                        <div class="reaction-demo pet cat celebrating"></div>
+                        <span>🎉 Celebrating</span>
+                        <small>Achievements</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="reading">
+                        <div class="reaction-demo pet cat reading"></div>
+                        <span>📚 Reading</span>
+                        <small>Articles, Docs</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="gaming">
+                        <div class="reaction-demo pet cat gaming"></div>
+                        <span>🎮 Gaming</span>
+                        <small>Game Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="shopping">
+                        <div class="reaction-demo pet cat shopping"></div>
+                        <span>🛒 Shopping</span>
+                        <small>E-commerce</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="working">
+                        <div class="reaction-demo pet cat working"></div>
+                        <span>💼 Working</span>
+                        <small>Professional</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="relaxing">
+                        <div class="reaction-demo pet cat relaxing"></div>
+                        <span>🧘 Relaxing</span>
+                        <small>Meditation</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="dancing">
+                        <div class="reaction-demo pet cat dancing"></div>
+                        <span>💃 Dancing</span>
+                        <small>Music Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="thinking">
+                        <div class="reaction-demo pet cat thinking"></div>
+                        <span>🤔 Thinking</span>
+                        <small>Learning</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="laughing">
+                        <div class="reaction-demo pet cat laughing"></div>
+                        <span>😂 Laughing</span>
+                        <small>Funny Content</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="crying">
+                        <div class="reaction-demo pet cat crying"></div>
+                        <span>😢 Crying</span>
+                        <small>Sad Content</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="angry">
+                        <div class="reaction-demo pet cat angry"></div>
+                        <span>😡 Angry</span>
+                        <small>Frustrating Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="surprised">
+                        <div class="reaction-demo pet cat surprised"></div>
+                        <span>😲 Surprised</span>
+                        <small>Breaking News</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="bored">
+                        <div class="reaction-demo pet cat bored"></div>
+                        <span>😑 Bored</span>
+                        <small>Waiting</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="love">
+                        <div class="reaction-demo pet cat love"></div>
+                        <span>😍 In Love</span>
+                        <small>Favorite Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="sick">
+                        <div class="reaction-demo pet cat sick"></div>
+                        <span>🤢 Sick</span>
+                        <small>Bad Content</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="cool">
+                        <div class="reaction-demo pet cat cool"></div>
+                        <span>😎 Cool</span>
+                        <small>Tech Sites</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="scared">
+                        <div class="reaction-demo pet cat scared"></div>
+                        <span>😨 Scared</span>
+                        <small>Horror Content</small>
+                    </div>
+                    <div class="reaction-card" data-reaction="dizzy">
+                        <div class="reaction-demo pet cat dizzy"></div>
+                        <span>😵‍💫 Dizzy</span>
+                        <small>Information Overload</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
