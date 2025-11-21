@@ -1,5 +1,12 @@
-// Initialize Stripe
-const stripe = Stripe('pk_live_51SVKDtBowproMB4w9xaTvNjqfDwDKxkeoNZb2mmEq5RVIVXEQSjxH69b9ZiOfEdg7lhh71f0pJMPXItRik05qSDE00Aky6OwFR'); // Replace with your actual key
+// Initialize Stripe - get key from server
+let stripe;
+const apiPath = window.location.hostname === 'localhost' ? '' : '/api';
+
+fetch(`${apiPath}/stripe-config`)
+  .then(response => response.json())
+  .then(data => {
+    stripe = Stripe(data.publishableKey);
+  });
 
 // Premium pets data
 const premiumPets = [
@@ -58,10 +65,14 @@ const premiumReactions = [
 let selectedPets = [];
 let selectedReactions = [];
 
+// Get domain from environment or use current location
+const DOMAIN = window.location.origin;
+const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
 // Stripe payment functions
 async function createCheckoutSession(items, successUrl, cancelUrl) {
     try {
-        const response = await fetch('/create-checkout-session', {
+        const response = await fetch(`${apiPath}/create-checkout-session`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,8 +121,8 @@ async function buyAllPets() {
 
     await createCheckoutSession(
         items,
-        https://moodpet.store + '/success.html?product=all-pets',
-        https://moodpet.store + '/pricing.html'
+        DOMAIN + '/success.html?product=all-pets',
+        DOMAIN + '/pricing.html'
     );
 }
 
@@ -132,8 +143,8 @@ async function buyAllReactions() {
 
     await createCheckoutSession(
         items,
-        https://moodpet.store + '/success.html?product=all-reactions',
-        https://moodpet.store + '/pricing.html'
+        DOMAIN + '/success.html?product=all-reactions',
+        DOMAIN + '/pricing.html'
     );
 }
 
@@ -154,8 +165,8 @@ async function buyAIStudio() {
 
     await createCheckoutSession(
         items,
-        https://moodpet.store + '/success.html?product=ai-studio',
-        https://moodpet.store + '/pricing.html'
+        DOMAIN + '/success.html?product=ai-studio',
+        DOMAIN + '/pricing.html'
     );
 }
 
@@ -176,8 +187,8 @@ async function buyEverything() {
 
     await createCheckoutSession(
         items,
-        https://moodpet.store + '/success.html?product=everything',
-        https://moodpet.store + '/pricing.html'
+        DOMAIN + '/success.html?product=everything',
+        DOMAIN + '/pricing.html'
     );
 }
 
@@ -262,8 +273,8 @@ async function buySelectedPets() {
 
     await createCheckoutSession(
         items,
-        https://moodpet.store + '/success.html?product=individual-pets&items=' + selectedPets.map(p => p.id).join(','),
-        https://moodpet.store + '/pricing.html'
+        DOMAIN + '/success.html?product=individual-pets&items=' + selectedPets.map(p => p.id).join(','),
+        DOMAIN + '/pricing.html'
     );
 }
 
@@ -288,8 +299,8 @@ async function buySelectedReactions() {
 
     await createCheckoutSession(
         items,
-        https://moodpet.store + '/success.html?product=individual-reactions&items=' + selectedReactions.map(r => r.id).join(','),
-        https://moodpet.store + '/pricing.html'
+        DOMAIN + '/success.html?product=individual-reactions&items=' + selectedReactions.map(r => r.id).join(','),
+        DOMAIN + '/pricing.html'
     );
 }
 
