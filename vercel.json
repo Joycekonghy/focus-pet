@@ -1,13 +1,18 @@
 {
   "version": 2,
-  "functions": {
-    "server-stripe.js": {
-      "runtime": "@vercel/node"
+  "builds": [
+    {
+      "src": "server-stripe.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/create-checkout-session",
+      "dest": "/server-stripe.js"
+    },
+    {
+      "src": "/webhook", 
       "dest": "/server-stripe.js"
     }
   ]
