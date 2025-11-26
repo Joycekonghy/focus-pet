@@ -644,11 +644,118 @@
     50% { filter: brightness(1.3) saturate(1.4) drop-shadow(0 0 12px rgba(255, 255, 0, 0.6)); }
 }
 
-/* Custom avatar */
+/* Custom avatar - exactly like website */
 .focus-pet.custom {
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
+}
+
+/* Custom avatar animations - inherit all state animations */
+.focus-pet.custom.idle {
+    animation: bounce 3s ease-in-out infinite;
+}
+
+.focus-pet.custom.excited {
+    animation: excited-bounce 0.3s ease-in-out infinite, excited-wiggle 0.8s ease-in-out infinite;
+    filter: brightness(1.3) saturate(1.4) drop-shadow(0 0 10px rgba(255, 165, 0, 0.5));
+}
+
+.focus-pet.custom.sleepy {
+    animation: sleepy-sway 4s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+.focus-pet.custom.happy {
+    animation: happy-bounce 1.5s ease-in-out infinite, happy-glow 2s ease-in-out infinite;
+}
+
+.focus-pet.custom.headphones {
+    animation: headphone-nod 1.2s ease-in-out infinite;
+}
+
+.focus-pet.custom.focused {
+    animation: focused-pulse 2s ease-in-out infinite;
+}
+
+.focus-pet.custom.stressed {
+    animation: stressed-shake 0.3s ease-in-out infinite;
+}
+
+.focus-pet.custom.confused {
+    animation: confused-wobble 1s ease-in-out infinite;
+}
+
+.focus-pet.custom.celebrating {
+    animation: celebrating-jump 0.6s ease-in-out infinite;
+}
+
+.focus-pet.custom.reading {
+    animation: reading-focus 3s ease-in-out infinite;
+}
+
+.focus-pet.custom.gaming {
+    animation: gaming-intense 0.5s ease-in-out infinite;
+}
+
+.focus-pet.custom.shopping {
+    animation: shopping-browse 2s ease-in-out infinite;
+}
+
+.focus-pet.custom.working {
+    animation: working-steady 2.5s ease-in-out infinite;
+}
+
+.focus-pet.custom.relaxing {
+    animation: relaxing-breathe 4s ease-in-out infinite;
+}
+
+.focus-pet.custom.dancing {
+    animation: dancing-groove 0.8s ease-in-out infinite;
+}
+
+.focus-pet.custom.thinking {
+    animation: thinking-ponder 2s ease-in-out infinite;
+}
+
+.focus-pet.custom.laughing {
+    animation: laughing-shake 0.4s ease-in-out infinite;
+}
+
+.focus-pet.custom.crying {
+    animation: crying-droop 2s ease-in-out infinite;
+}
+
+.focus-pet.custom.angry {
+    animation: angry-shake 0.2s ease-in-out infinite;
+}
+
+.focus-pet.custom.surprised {
+    animation: surprised-jump 0.3s ease-in-out infinite;
+}
+
+.focus-pet.custom.bored {
+    animation: bored-sway 5s ease-in-out infinite;
+}
+
+.focus-pet.custom.love {
+    animation: love-float 1.5s ease-in-out infinite, love-glow 2s ease-in-out infinite;
+}
+
+.focus-pet.custom.sick {
+    animation: sick-wobble 3s ease-in-out infinite;
+}
+
+.focus-pet.custom.cool {
+    animation: cool-lean 2s ease-in-out infinite;
+}
+
+.focus-pet.custom.scared {
+    animation: scared-tremble 0.1s ease-in-out infinite;
+}
+
+.focus-pet.custom.dizzy {
+    animation: dizzy-spin 1s linear infinite;
 }
 
 /* Pet States */
@@ -673,6 +780,8 @@
 
 .focus-pet.headphones {
     position: relative;
+    animation: headphones-bob 1s ease-in-out infinite;
+    filter: brightness(1.1) saturate(1.2) drop-shadow(0 0 8px rgba(138, 43, 226, 0.5));
 }
 
 .focus-pet.headphones::before {
@@ -683,6 +792,12 @@
     transform: translateX(-50%);
     font-size: 20px;
     z-index: 1;
+    animation: headphones-glow 2s ease-in-out infinite;
+}
+
+@keyframes headphones-glow {
+    0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
 }
 
 /* Animations */

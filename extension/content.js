@@ -22,51 +22,82 @@ class FocusPet {
         this.createPet();
         this.startTracking();
         this.bindEvents();
+        
+        // Listen for Chrome storage changes (from website)
+        try {
+            if (chrome.storage && chrome.storage.onChanged) {
+                chrome.storage.onChanged.addListener((changes, namespace) => {
+                    if (namespace === 'local' && (changes.currentPet || changes.siteReactions || changes.customAvatar)) {
+                        console.log('Chrome storage changed, reloading pet');
+                        setTimeout(() => this.reloadPet(), 100);
+                    }
+                });
+            }
+        } catch (error) {
+            console.log('Cannot listen to storage changes - extension context invalidated');
+        }
     }
 
     async loadConfig() {
-        // Load from Chrome storage (synced from website)
         try {
+            if (!chrome.storage) {
+                throw new Error('Extension context invalidated');
+            }
+            
             const result = await chrome.storage.local.get([
                 'currentPet', 
                 'siteReactions', 
                 'customAvatar',
-                'aiAnimations'
+                'aiAnimations',
+                'focusPetPurchases'
             ]);
-            this.config.pet = result.currentPet || 'cat';
-            this.config.reactions = result.siteReactions || [];
-            this.config.customAvatar = result.customAvatar;
-            this.config.aiAnimations = result.aiAnimations || [];
             
-            // Also try to sync from website if available
-            this.syncFromWebsite();
-        } catch (error) {
-            console.log('Using default pet config');
-        }
-    }
-
-    async syncFromWebsite() {
-        // Check if user has configured pet on website
-        try {
-            const websiteConfig = localStorage.getItem('currentPet');
-            if (websiteConfig) {
-                // Sync website config to extension storage
-                const siteReactions = JSON.parse(localStorage.getItem('siteReactions') || '[]');
-                const customAvatar = localStorage.getItem('customAvatar');
-                
-                await chrome.storage.local.set({
-                    currentPet: websiteConfig,
-                    siteReactions: siteReactions,
-                    customAvatar: customAvatar
-                });
-                
-                // Update current config
-                this.config.pet = websiteConfig;
-                this.config.reactions = siteReactions;
-                this.config.customAvatar = customAvatar;
+            // If Chrome storage is empty, try localStorage
+            if (!result.currentPet && !result.siteReactions) {
+                try {
+                    const localPet = localStorage.getItem('currentPet');
+                    const localReactions = localStorage.getItem('siteReactions');
+                    const localAvatar = localStorage.getItem('customAvatar');
+                    
+                    if (localPet || localReactions) {
+                        this.config.pet = localPet || 'cat';
+                        this.config.reactions = localReactions ? JSON.parse(localReactions) : [];
+                        this.config.customAvatar = localAvatar;
+                        
+                        // Save to Chrome storage for future use
+                        chrome.storage.local.set({
+                            currentPet: this.config.pet,
+                            siteReactions: this.config.reactions,
+                            customAvatar: this.config.customAvatar
+                        });
+                        
+                        console.log('Synced from localStorage to Chrome storage');
+                    }
+                } catch (e) {
+                    console.log('localStorage not available');
+                }
+            } else {
+                this.config.pet = result.currentPet || 'cat';
+                this.config.reactions = result.siteReactions || [];
+                this.config.customAvatar = result.customAvatar;
             }
+            
+            this.config.aiAnimations = result.aiAnimations || [];
+            this.purchases = result.focusPetPurchases || {};
+            
+            console.log('Extension config loaded:', {
+                pet: this.config.pet,
+                hasCustomAvatar: !!this.config.customAvatar,
+                reactions: this.config.reactions.length,
+                reactionsData: this.config.reactions
+            });
+            
+            if (this.isPremiumPet(this.config.pet) && !this.hasPurchased(this.config.pet)) {
+                this.config.pet = 'cat';
+            }
+            
         } catch (error) {
-            // Website sync failed, use extension storage
+            console.log('Using defaults:', error);
         }
     }
 
@@ -78,12 +109,29 @@ class FocusPet {
         // Create pet container
         this.pet = document.createElement('div');
         this.pet.id = 'focus-pet';
-        this.pet.className = `focus-pet ${this.config.pet} idle`;
         
         // Add custom avatar if available
         if (this.config.customAvatar) {
-            this.pet.style.backgroundImage = `url(${this.config.customAvatar})`;
-            this.pet.classList.add('custom');
+            console.log('Loading custom avatar:', this.config.customAvatar.substring(0, 50) + '...');
+            // Create an img element to test if the image loads
+            const testImg = new Image();
+            testImg.onload = () => {
+                console.log('Custom avatar loaded successfully');
+                // Use both pet type AND custom - exactly like website
+                this.pet.className = `focus-pet ${this.config.pet} custom idle`;
+                this.pet.style.backgroundImage = `url("${this.config.customAvatar}")`;
+                this.pet.style.backgroundSize = 'cover';
+                this.pet.style.backgroundPosition = 'center';
+                this.pet.style.backgroundRepeat = 'no-repeat';
+            };
+            testImg.onerror = () => {
+                console.log('Custom avatar failed to load, using default pet');
+                this.pet.className = `focus-pet ${this.config.pet} idle`; // Use default pet
+            };
+            testImg.src = this.config.customAvatar;
+        } else {
+            console.log('No custom avatar found, using default pet:', this.config.pet);
+            this.pet.className = `focus-pet ${this.config.pet} idle`;
         }
 
         // Position pet
@@ -128,17 +176,37 @@ class FocusPet {
     setPetState(state) {
         if (!this.pet) return;
         
-        // Remove all state classes
-        this.pet.classList.remove('idle', 'happy', 'sleepy', 'excited', 'headphones');
+        console.log('Setting pet state to:', state);
         
-        // Add new state
-        this.pet.classList.add(state);
+        // Always maintain base classes and pet type
+        const baseClasses = ['focus-pet', this.config.pet];
+        if (this.config.customAvatar) {
+            baseClasses.push('custom');
+        }
+        
+        // Set complete class list
+        this.pet.className = baseClasses.join(' ') + ' ' + state;
+        
+        // Reset inline styles to let CSS handle animations
+        this.pet.style.border = '';
+        this.pet.innerHTML = '';
+        this.pet.style.animation = '';
+        this.pet.style.filter = '';
+        this.pet.style.display = '';
+        this.pet.style.alignItems = '';
+        this.pet.style.justifyContent = '';
+        this.pet.style.fontSize = '';
+        
+        console.log('Pet classes after state change:', this.pet.className);
         
         // Send tracking data
         this.trackBehavior(state);
     }
 
     startTracking() {
+        // Check for site-specific reactions immediately
+        this.checkSiteReaction();
+        
         // Update energy and mood every minute
         setInterval(() => {
             this.updateEnergyAndMood();
@@ -221,11 +289,17 @@ class FocusPet {
         this.adjustPetForEnergy();
         
         // Store energy and mood for popup
-        chrome.storage.local.set({
-            currentEnergy: this.energy,
-            currentMood: this.mood,
-            lastUpdate: now
-        });
+        try {
+            if (chrome.storage) {
+                chrome.storage.local.set({
+                    currentEnergy: this.energy,
+                    currentMood: this.mood,
+                    lastUpdate: now
+                });
+            }
+        } catch (error) {
+            console.log('Cannot store data - extension context invalidated');
+        }
     }
 
     adjustPetForEnergy() {
@@ -273,15 +347,21 @@ class FocusPet {
 
     trackBehavior(state) {
         // Send data to background script for analytics
-        chrome.runtime.sendMessage({
-            type: 'track_behavior',
-            data: {
-                site: this.currentSite,
-                state: state,
-                timestamp: Date.now(),
-                timeSpent: Date.now() - this.startTime
+        try {
+            if (chrome.runtime && chrome.runtime.sendMessage) {
+                chrome.runtime.sendMessage({
+                    type: 'track_behavior',
+                    data: {
+                        site: this.currentSite,
+                        state: state,
+                        timestamp: Date.now(),
+                        timeSpent: Date.now() - this.startTime
+                    }
+                });
             }
-        });
+        } catch (error) {
+            console.log('Cannot send message - extension context invalidated');
+        }
     }
 
     bindEvents() {
@@ -305,6 +385,53 @@ class FocusPet {
         this.pet.addEventListener('mouseleave', () => {
             this.pet.style.transform = 'scale(1)';
         });
+    }
+
+    isPremiumPet(petType) {
+        const premiumPets = ['rabbit', 'bird', 'fox', 'panda', 'hamster', 'owl', 'bear', 'penguin', 'frog', 'turtle', 'snake', 'fish', 'butterfly', 'bee', 'dragon', 'unicorn', 'phoenix', 'alien', 'ghost', 'robot', 'wizard', 'crystal', 'flame', 'shadow', 'galaxy'];
+        return premiumPets.includes(petType);
+    }
+
+    hasPurchased(petType) {
+        if (!this.purchases) return false;
+        return this.purchases.everything || this.purchases.allPets || this.purchases[petType];
+    }
+
+    checkSiteReaction() {
+        const hostname = window.location.hostname;
+        console.log('Checking site reaction for:', hostname);
+        console.log('Available custom reactions:', this.config.reactions);
+        
+        // Check custom reactions first - these take priority
+        if (this.config.reactions && this.config.reactions.length > 0) {
+            for (const reaction of this.config.reactions) {
+                console.log('Checking reaction:', reaction.site, 'against', hostname);
+                if (hostname.includes(reaction.site) || reaction.site.includes(hostname)) {
+                    console.log('Found custom reaction:', reaction.reaction, 'for site:', reaction.site);
+                    this.setPetState(reaction.reaction);
+                    return;
+                }
+            }
+        }
+        
+        // Only use defaults if no custom reactions are configured at all
+        console.log('No custom reactions found, using idle state');
+        this.setPetState('idle');
+    }
+
+    async reloadPet() {
+        // Remove old pet
+        if (this.pet && this.pet.parentNode) {
+            this.pet.parentNode.removeChild(this.pet);
+        }
+        
+        // Reload config and create new pet
+        await this.loadConfig();
+        this.createPet();
+        document.body.appendChild(this.pet);
+        
+        // Check reactions for new pet
+        this.checkSiteReaction();
     }
 }
 

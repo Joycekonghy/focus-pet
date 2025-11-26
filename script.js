@@ -175,6 +175,7 @@ class PetDashboard {
                 this.currentPet = petType;
                 this.updatePetPreview();
                 this.updateReactionDemos();
+                this.syncToExtension();
             });
         });
 
@@ -186,6 +187,13 @@ class PetDashboard {
         // Add reaction button
         document.getElementById('add-reaction').addEventListener('click', () => {
             this.addReactionRow();
+        });
+
+        // Save reactions button
+        document.getElementById('save-reactions').addEventListener('click', () => {
+            console.log('Save button clicked!');
+            this.saveSiteReactions();
+            alert('✅ Reactions saved! They will sync to your extension.');
         });
 
         // Download extension
@@ -268,6 +276,7 @@ class PetDashboard {
             
             // Save to localStorage for extension
             localStorage.setItem('customAvatar', e.target.result);
+            this.syncToExtension();
             
             alert('Custom avatar uploaded! Use AI Animation Studio to create custom animations.');
         };
@@ -610,10 +619,12 @@ class PetDashboard {
 
         // Bind input changes
         row.querySelector('.site-input').addEventListener('change', () => {
+            console.log('Site input changed, saving reactions');
             this.saveSiteReactions();
         });
         
         row.querySelector('.reaction-select').addEventListener('change', () => {
+            console.log('Reaction select changed, saving reactions');
             this.saveSiteReactions();
         });
 
@@ -941,6 +952,11 @@ class PetDashboard {
         this.siteReactions = reactions;
         localStorage.setItem('siteReactions', JSON.stringify(reactions));
         localStorage.setItem('currentPet', this.currentPet);
+        
+        // Sync to extension
+        this.syncToExtension();
+        
+        console.log('Saved site reactions:', reactions);
     }
 
     downloadExtension() {
@@ -960,6 +976,21 @@ Current settings:
 • Pet: ${this.currentPet}
 • Reactions: ${this.siteReactions.length} configured
 • Custom avatar: ${this.customAvatar ? 'Yes' : 'No'}`);
+    }
+
+    syncToExtension() {
+        // Save to localStorage - extension will read from here
+        localStorage.setItem('currentPet', this.currentPet);
+        localStorage.setItem('siteReactions', JSON.stringify(this.siteReactions));
+        if (this.customAvatar) {
+            localStorage.setItem('customAvatar', this.customAvatar);
+        }
+        
+        console.log('✅ Synced to localStorage for extension:', {
+            pet: this.currentPet,
+            reactions: this.siteReactions.length,
+            hasCustomAvatar: !!this.customAvatar
+        });
     }
 }
 
